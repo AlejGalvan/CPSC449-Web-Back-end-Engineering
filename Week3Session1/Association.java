@@ -57,15 +57,26 @@ class Bank {
 public class Association {
     public static void main(String[] args) {
         // Create employee objects
-        
+        Employee emp1 = new Employee("Alice");
+        Employee emp2 = new Employee("Bob");
 
         // Create a set of employees
-        
+        Set<Employee> employeeSet = new HashSet<>();
+        employeeSet.add(emp1);
+        employeeSet.add(emp2);
 
         // Create bank object
-        
+        Bank b = new Bank("ABC Bank");
+        b.setEmployees(employeeSet);
+        b = null;
+
+        System.out.println(emp1.getEmployeeName());
 
         // Display bank employees
+        // System.out.println("Employees of " + b.getBankName() + ":");
+        // for(Employee emp : b.getEmployees()) {
+        //     System.out.println("- " + emp.getEmployeeName());
+        // }
         
     }
 }

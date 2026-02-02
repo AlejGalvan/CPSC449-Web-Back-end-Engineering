@@ -93,21 +93,35 @@ class Institute {
 public class Aggregation {
     public static void main(String[] args) {
         // Create Students
-        
+        Student s1 = new Student("Alice", 101);
+        Student s2 = new Student("Bob", 102);
+        Student s3 = new Student("Charlie", 103);
+        Student s4 = new Student("David", 104);
 
         // Create list of students for CSE Department
-        
+        List<Student> cseStudents = new ArrayList<>();
+        cseStudents.add(s1);
+        cseStudents.add(s2);
 
         // Create CSE Department
-        
+        Department csDepartment = new Department("Computer Science", cseStudents);
+
 
         // Create list of students for Electricals Department
+        List<Student> eceStudents = new ArrayList<>();
+        eceStudents.add(s3);
+        eceStudents.add(s4);
 
         // Create Electricals Department
+        Department eDepartment = new Department("Electricals", eceStudents);
 
         // Create list of departments for Institute
+        List<Department> departments = new ArrayList<>();
+        departments.add(csDepartment);
+        departments.add(eDepartment);
 
         // Create Institute
+        Institute institute = new Institute("Tech Institute", departments);
 
         // Getting total number of students in the institute
         
