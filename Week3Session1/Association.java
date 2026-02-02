@@ -1,5 +1,3 @@
-package OOP.week3session1;
-
 import java.io.*;
 import java.util.*;
 
