@@ -1,6 +1,7 @@
 package com.example.webbackend.controller;
 
 import com.example.webbackend.entity.Book;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -115,5 +116,113 @@ public class BookController {
 
     }
 
+    @PutMapping("/books/{id}")
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+
+        for (Book book : books) {
+            if (book.getId().equals(id)) {
+                book.setTitle(updatedBook.getTitle());
+                book.setAuthor(updatedBook.getAuthor());
+                book.setPrice(updatedBook.getPrice());
+                return ResponseEntity.ok(book);
+            }
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/books/{id}")
+    public ResponseEntity<Book> patchBook(
+            @PathVariable Long id,
+            @RequestBody Book partialBook) {
+
+        for (Book book : books) {
+            if (book.getId().equals(id)) {
+
+                if (partialBook.getTitle() != null) {
+                    book.setTitle(partialBook.getTitle());
+                }
+                if (partialBook.getAuthor() != null) {
+                    book.setAuthor(partialBook.getAuthor());
+                }
+                if (partialBook.getPrice() != null) {
+                    book.setPrice(partialBook.getPrice());
+                }
+
+                return ResponseEntity.ok(book);
+            }
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/books/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+
+        boolean removed = books.removeIf(book -> book.getId().equals(id));
+
+        if (removed) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/books/paged")
+    public List<Book> getBooksPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        int start = page * size;
+        int end = Math.min(start + size, books.size());
+
+        if (start > books.size()) {
+            return new ArrayList<>();
+        }
+
+        return books.subList(start, end);
+    }
+
+    @GetMapping("/books/advanced")
+    public List<Book> advancedSearch(
+            @RequestParam(required = false) String author,
+            @RequestParam(defaultValue = "title") String sortBy,
+            @RequestParam(defaultValue = "asc") String order,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        List<Book> filtered = books.stream()
+                .filter(book -> author == null ||
+                        book.getAuthor().toLowerCase().contains(author.toLowerCase()))
+                .collect(Collectors.toList());
+
+        Comparator<Book> comparator;
+
+        switch (sortBy.toLowerCase()) {
+            case "author":
+                comparator = Comparator.comparing(Book::getAuthor);
+                break;
+            case "price":
+                comparator = Comparator.comparing(Book::getPrice);
+                break;
+            default:
+                comparator = Comparator.comparing(Book::getTitle);
+        }
+
+        if ("desc".equalsIgnoreCase(order)) {
+            comparator = comparator.reversed();
+        }
+
+        filtered.sort(comparator);
+
+        int start = page * size;
+        int end = Math.min(start + size, filtered.size());
+
+        if (start > filtered.size()) {
+            return new ArrayList<>();
+        }
+
+        return filtered.subList(start, end);
+    }
 
 }
