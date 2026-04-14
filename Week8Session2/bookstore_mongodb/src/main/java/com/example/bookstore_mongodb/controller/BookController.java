@@ -3,9 +3,11 @@ package com.example.bookstore_mongodb.controller;
 import com.example.bookstore_mongodb.entity.Book;
 import com.example.bookstore_mongodb.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/books")
@@ -21,5 +23,16 @@ public class BookController {
     @PostMapping
     public Book createBook(@RequestBody Book book) {
         return bookService.createBook(book);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBook(@PathVariable String id) {
+        boolean deleted = bookService.deleteBookById(id);
+
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(Map.of("message", "Book deleted successfully"));
     }
 }
