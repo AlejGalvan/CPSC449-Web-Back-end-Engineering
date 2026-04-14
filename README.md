@@ -1,3 +1,35 @@
+# Assignment 2 - JWT Role-Based Authorization
+### Overview
+This project extends a secure Bookstore REST API built with Spring Boot and Spring Security by implementing role-based authorization using JWT (JSON Web Tokens).
+The system supports two roles:
+* USER - can view and create books
+* ADMIN - has full privileges, including deleting books
+The main enhancement in this assignment is restricying the DELETE operation to ADMIN users only.
+
+### Authentication & Authorization
+* Authentication is handled using JWT tokens
+* Users must log in to receive a token
+* The token must be included in requests using the Authorization header:
+Authorization: Bearer <JWT_TOKEN>
+
+### API Endpoints
+Authentication
+* POST /api/auth/register
+  Register a new user with roles
+* POST /api/auth/login
+  Authenticate user and return JWT token
+
+Books
+* GET /api/books
+  Retrieve all books (accessible to authenication users)
+* POST /api/books
+  Create a new book (USER role required)
+* DELETE /api/books/{id}
+  Delete a book by ID (ADMIN role required)
+  * Returns 200 OK if successful
+  * Returns 404 Not Found if book does not exist
+  * Returns 403 Forbidden if users lacks ADMIN role
+
 ## Postman Test Results
 1. Register Admin User
 <img width="1535" height="770" alt="image" src="https://github.com/user-attachments/assets/fceb4bff-79ee-4d80-90fc-0ce2f03c1d29" />
